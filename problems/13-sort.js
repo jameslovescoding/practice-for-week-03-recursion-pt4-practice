@@ -23,7 +23,28 @@ sort([]); // []
 
 function sort(nums, sorted = []) {
     // Your code here
+    if (nums.length === 0) {
+        return [...sorted];
+    }
+    if (nums.length === 1) {
+        //let newSorted = sorted.concat(nums);
+        return [...sorted, ...nums];
+    }
+    let leastNum = nums[0];
+    let leastIndex = 0;
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] < leastNum) {
+            leastNum = nums[i];
+            leastIndex = i;
+        }
+    }
+    let newNums = [...nums];
+    newNums.splice(leastIndex, 1);
+    let newSorted = [...sorted]
+    newSorted.push(leastNum);
+    return [...sort(newNums, newSorted)];
 }
+//sort([4,1,6,3,1,7]);
 
 /**************DO NOT MODIFY ANYTHING UNDER THIS LINE*****************/
 module.exports = sort;

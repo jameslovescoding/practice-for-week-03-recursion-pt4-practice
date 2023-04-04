@@ -3,7 +3,7 @@
 ************************************************************************
 Write a function called `subsets` that will return all subsets of an array.
 
-Examples: 
+Examples:
 
 subsets([]) // [[]]
 subsets([1]) // [[], [1]]
@@ -18,6 +18,27 @@ Hint: For subsets([1, 2, 3]), there are two kinds of subsets:
 
 const subsets = (arr) => {
   // Your code here
+  // empty arr;
+  let length = arr.length;
+  if (arr.length === 0) {
+    return [[]];
+  }
+  // one element in arr
+  if (arr.length === 1) {
+    return [[], arr];
+  }
+  //
+  let prevSubsets = subsets(arr.slice(0, length - 1));
+  //
+  let lastElement = arr[length - 1];
+  let newArr = [...prevSubsets];
+  newArr = prevSubsets.concat(prevSubsets.map((ele) => {
+    let newEle = [...ele];
+    newEle.push(lastElement);
+    return newEle;
+  }));
+  //
+  return newArr;
 }
 
 /**************DO NOT MODIFY ANYTHING UNDER THIS LINE*****************/
