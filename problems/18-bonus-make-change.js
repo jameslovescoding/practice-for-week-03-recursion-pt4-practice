@@ -57,8 +57,27 @@ combinations.
 
 function makeBetterChange(target, coins = [25, 10, 5, 1]) {
   // Your code here
+  let findIndex = coins.indexOf(target);
+  if (findIndex !== -1) {
+    let choosenCoin = coins[findIndex];
+    return [choosenCoin];
+  }
+  //
+  let coinsSmallerThanTarget = coins.filter((coin) => {
+    return coin < target;
+  });
+  coinsSmallerThanTarget.sort((a, b) => a > b);
+  for (let coin of coinsSmallerThanTarget) {
+    let solution = makeBetterChange(target - coin, coins);
+    if (solution !== null) {
+      solution.push(coin);
+      return solution;
+    }
+  }
+  return null;
 }
 
+console.log(makeBetterChange(24, [10, 7, 1]));
 
 /**************DO NOT MODIFY ANYTHING UNDER THIS LINE*****************/
 try {
