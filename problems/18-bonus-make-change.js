@@ -56,28 +56,61 @@ combinations.
 ***********************************************************************/
 
 function makeBetterChange(target, coins = [25, 10, 5, 1]) {
+
   // Your code here
-  let findIndex = coins.indexOf(target);
-  if (findIndex !== -1) {
-    let choosenCoin = coins[findIndex];
-    return [choosenCoin];
-  }
-  //
-  let coinsSmallerThanTarget = coins.filter((coin) => {
-    return coin < target;
-  });
-  coinsSmallerThanTarget.sort((a, b) => a > b);
-  for (let coin of coinsSmallerThanTarget) {
-    let solution = makeBetterChange(target - coin, coins);
-    if (solution !== null) {
-      solution.push(coin);
-      return solution;
+  let allCombos = [];
+
+  // helper function, dfs
+  function helper(target, prevCoins, coins) {
+    let findIndex = coins.indexOf(target);
+    if (findIndex !== -1) {
+      let choosenCoin = coins[findIndex];
+      let findCombo = [choosenCoin, ...prevCoins];
+      allCombos.push(findCombo);
+      return;
     }
+    // check if it is necessary to continue.
+    // If the new possible combos are already longer than the shortest combo,
+    // then there's no need to try it.
+    if (allCombos.length !== 0) {
+      let lengthLimit = allCombos[0].length;
+      for (let i = 1; i < allCombos.length; i++) {
+        if (allCombos[i].length < lengthLimit) {
+          lengthLimit = allCombos[i].length;
+        }
+      }
+      if (prevCoins.length >= lengthLimit) {
+        return;
+      }
+    }
+    // try new combo
+    let coinsSmallerThanTarget = coins.filter((coin) => {
+      return coin < target;
+    });
+    coinsSmallerThanTarget.sort((a, b) => a > b);
+    for (let coin of coinsSmallerThanTarget) {
+      helper(target - coin, [coin, ...prevCoins], coins);
+    }
+    return;
   }
-  return null;
+
+  // begin dfs
+  helper(target, [], coins);
+
+  // return result
+  if (allCombos.length === 0) {
+    return null;
+  }
+  let shortestCombo = allCombos.reduce((acc, combo) => {
+    let shorterCombo = (combo.length < acc.length) ? combo : acc;
+    return shorterCombo;
+  });
+  return shortestCombo;
 }
 
-console.log(makeBetterChange(24, [10, 7, 1]));
+
+
+//console.log(makeBetterChange(75));
 
 /**************DO NOT MODIFY ANYTHING UNDER THIS LINE*****************/
 try {
